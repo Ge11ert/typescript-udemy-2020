@@ -1,11 +1,6 @@
 import path from 'path';
-import { CsvFileReader } from './CsvFileReader';
-
-enum Winner {
-  HOME = 'H',
-  AWAY = 'A',
-  DRAW = 'D',
-}
+import { CsvFileReader, Match } from './CsvFileReader';
+import { Winner } from './MatchResult';
 
 const sourceFile = 'football.csv';
 const sourceFilePath = path.resolve(__dirname, `../${sourceFile}`);
@@ -14,7 +9,7 @@ reader.read();
 
 let manUnitedWins = 0;
 
-reader.data.forEach((match: string[]) => {
+reader.data.forEach((match: Match) => {
   if (match[1] === 'Man United' && match[5] === Winner.HOME) {
     manUnitedWins++;
   } else if (match[2] === 'Man United' && match[5] === Winner.AWAY) {
