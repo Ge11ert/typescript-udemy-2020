@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export class CsvFileReader_Interface {
+export class CsvFileReader {
   data: string[][] = [];
 
   constructor(public pathToFile: string) {}

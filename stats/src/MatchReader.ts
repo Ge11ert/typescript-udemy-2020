@@ -1,22 +1,13 @@
 import { dateStringToDate } from './utils';
 import { Winner } from './MatchResult';
+import { Match } from './Match';
 
 interface DataReader {
   read(): void;
   data: string[][];
 }
 
-type Match = [
-  Date,
-  string,
-  string,
-  number,
-  number,
-  Winner,
-  string,
-];
-
-export class MatchReader_Interface {
+export class MatchReader {
   matches: Match[] = [];
 
   constructor(public reader: DataReader) {}

@@ -1,22 +1,16 @@
 import path from 'path';
-import { MatchReader_Abstract, Match } from './MatchReader_Abstract';
-import { MatchReader_Interface } from './MatchReader_Interface';
-import { CsvFileReader_Interface } from './CsvFileReader_Interface';
+import { MatchReader } from './MatchReader';
+import { CsvFileReader } from './CsvFileReader';
 import { Winner } from './MatchResult';
+import { Match } from './Match';
 
 const sourceFile = 'football.csv';
 const sourceFilePath = path.resolve(__dirname, `../${sourceFile}`);
 
-/// abstract class usage
-const reader = new MatchReader_Abstract(sourceFilePath);
-reader.read();
-
-///
-const csvFileReader = new CsvFileReader_Interface(sourceFilePath);
-const matchReader = new MatchReader_Interface(csvFileReader);
+const csvFileReader = new CsvFileReader(sourceFilePath);
+const matchReader = new MatchReader(csvFileReader);
 
 matchReader.load();
-
 
 /// main part
 let manUnitedWins = 0;
