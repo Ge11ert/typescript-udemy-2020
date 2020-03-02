@@ -11,7 +11,8 @@
     "sort": "concurrently npm:sort:*",
     "stats:build": "cd stats && tsc -w",
     "stats:start": "nodemon ./stats/build/index.js",
-    "stats": "concurrently npm:stats:*"
+    "stats": "concurrently npm:stats:*",
+    "web-dev": "parcel ./framework/index.html"
   },
   "keywords": [],
   "author": "",
