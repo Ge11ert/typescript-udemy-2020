@@ -1,4 +1,6 @@
-import axios from 'axios';
+import { Eventing } from './Eventing';
+import { Fetcher } from './Fetcher';
+import {type} from "os";
 
 export type UserProps = {
   name?: string,
@@ -6,49 +8,56 @@ export type UserProps = {
   id?: number,
 }
 
-type Callback = () => void;
+const baseUrl = 'http://localhost:3000';
 
 export class User {
-  events: Record<string, Callback[]> = {};
+  public events: Eventing = new Eventing();
+  public fetcher: Fetcher<UserProps> = new Fetcher<UserProps>(baseUrl);
 
   constructor(private props: UserProps) {}
 
-  get(propName: keyof UserProps) {
+  get on() {
+    return this.events.on;
+  }
+
+  get trigger() {
+    return this.events.trigger;
+  }
+
+  get<K extends keyof UserProps>(propName: K): UserProps[K] {
     return this.props[propName];
   }
 
   set(newProps: Partial<UserProps>): void {
     Object.assign(this.props, newProps);
+    this.events.trigger('change');
   }
 
-  on(eventName: string, callback: Callback): void {
-    const handlers = this.events[eventName] || [];
-    this.events[eventName] = handlers.concat([callback]);
-  }
+  fetch(): void | never {
+    const id = this.get('id');
 
-  trigger(eventName: string): void {
-    const handlers = this.events[eventName];
-
-    if (Array.isArray(handlers) && handlers.length > 0) {
-      handlers.forEach(callback => {
-        callback();
-      })
+    if (typeof id !== 'number') {
+      throw new Error()
     }
-  }
 
-  fetch() {
-    axios.get(`http://localhost:3000/users/${this.get('id')}`).then((response) => {
-      this.set(response.data);
-    })
+    this.fetcher.fetch(`/users/${id}`).then((responseData: UserProps) => {
+      this.set(responseData);
+    });
   }
 
   save() {
     const id = this.get('id');
+    const triggerSave = () => { this.events.trigger('save'); };
+    const triggerError = () => { this.events.trigger('save_error'); };
 
     if (id) {
-      axios.put(`http://localhost:3000/users/${this.get('id')}`, this.props);
+      this.fetcher.update(`/users/${id}`, this.props)
+        .then(triggerSave)
+        .catch(triggerError);
     } else {
-      axios.post('http://localhost:3000/users', this.props);
+      this.fetcher.save('/users', this.props)
+        .then(triggerSave)
+        .catch(triggerError);
     }
   }
 }
