@@ -1,6 +1,7 @@
 import { Model } from './Model';
 import { Eventing } from './Eventing';
 import { Fetcher } from './Fetcher';
+import { Collection } from './Collection';
 
 export type UserProps = {
   name?: string,
@@ -17,5 +18,9 @@ export class User extends Model<UserProps>{
       new Eventing(),
       new Fetcher<UserProps>(baseUrl, '/users'),
     )
+  }
+
+  static buildCollection(): Collection<User, UserProps> {
+    return new Collection<User, UserProps>(`${baseUrl}/users`, User.build);
   }
 }
