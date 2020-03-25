@@ -5,19 +5,25 @@ interface HasId {
 }
 
 export class Fetcher<T extends HasId> {
-  constructor(public baseUrl: string) {}
+  constructor(
+    public baseUrl: string,
+    public endpoint: string
+  ) {}
 
-  fetch(endpoint: string): Promise<T> {
-    return axios.get(`${this.baseUrl}${endpoint}`).then((response: AxiosResponse): T => {
+  fetch(id: number): Promise<T> {
+    const url = `${this.baseUrl}${this.endpoint}/${id}`;
+    return axios.get(url).then((response: AxiosResponse): T => {
       return response.data;
     });
   }
 
-  update(endpoint: string, data: T): AxiosPromise {
-    return axios.put(`${this.baseUrl}${endpoint}`, data);
+  update(id: number, data: T): AxiosPromise {
+    const url = `${this.baseUrl}${this.endpoint}/${id}`;
+    return axios.put(url, data);
   }
 
-  save(endpoint: string, data: T): AxiosPromise {
-    return axios.post(`${this.baseUrl}${endpoint}`, data);
+  save(data: T): AxiosPromise {
+    const url = `${this.baseUrl}${this.endpoint}`;
+    return axios.post(url, data);
   }
 }
