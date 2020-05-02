@@ -1,11 +1,8 @@
 import { User } from '../models/User';
+import { View } from './View';
 
-export class UserForm {
-  constructor(private parent: Element, private model: User) {
-    this.bindModel();
-  }
-
-  private eventsMap(): Record<string, (event: Event) => void> {
+export class UserForm extends View<User> {
+  eventsMap(): Record<string, (event: Event) => void> {
     return {
       'submit:.user-form__form': this.onSubmit.bind(this),
       'click:.user-form__random-age-button': this.onRandomAgeButtonClick.bind(this),
@@ -31,7 +28,7 @@ export class UserForm {
     this.model.setRandomAge();
   }
 
-  private template(): string {
+  template(): string {
     return `
 <div class="user-form">
     <h1 class="user-form__title">User form</h1>
@@ -52,36 +49,6 @@ export class UserForm {
         <button type="submit" class="user-form__submit-button">Submit</button>
       </p>
     </form>
-</div>
-    `;
-  }
-
-  private bindModel(): void {
-    this.model.on('change', () => {
-      this.render();
-    });
-  }
-
-  private bindEvents(fragment: DocumentFragment) {
-    const eventsMap = this.eventsMap();
-
-    for (let eventKey in eventsMap) {
-      const [eventName, selector] = eventKey.split(':');
-
-      fragment.querySelectorAll(selector).forEach(element => {
-        element.addEventListener(eventName, (event) => eventsMap[eventKey](event));
-      });
-    }
-  }
-
-  render(): void {
-    this.parent.innerHTML = '';
-
-    const templateEl = document.createElement('template');
-    templateEl.innerHTML = this.template();
-
-    this.bindEvents(templateEl.content);
-
-    this.parent.append(templateEl.content);
+</div>`;
   }
 }
