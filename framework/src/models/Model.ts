@@ -58,7 +58,7 @@ export class Model<T extends HasId> {
     const triggerError = () => { this.events.trigger('save_error'); };
 
     if (id) {
-      this.fetcher.update(id, this.attributes)
+      this.fetcher.update(id as number, this.attributes)
         .then(triggerSave)
         .catch(triggerError);
     } else {
