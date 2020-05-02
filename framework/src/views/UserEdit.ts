@@ -1,9 +1,22 @@
 import { View } from './View';
+import { UserForm } from './UserForm';
+import { UserShow } from './UserShow';
 import { User } from '../models/User';
 
-class UserEdit extends View<User> {
-  eventsMap(): Record<string, (event: Event) => void> {
-    return {};
+export class UserEdit extends View<User> {
+  regionsMap(): { [key: string]: string } {
+    return {
+      userShow: '.user-edit__details',
+      userForm: '.user-edit__form',
+    }
+  }
+
+  onRender() {
+    const userShow = new UserShow(this.regions.userShow, this.model);
+    userShow.render();
+
+    const userForm = new UserForm(this.regions.userForm, this.model);
+    userForm.render();
   }
 
   template(): string {

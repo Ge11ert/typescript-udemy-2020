@@ -2,10 +2,6 @@ import { View } from './View';
 import { User } from '../models/User';
 
 export class UserShow extends View<User> {
-  eventsMap(): Record<string, (event: Event) => void> {
-    return {};
-  }
-
   template(): string {
     return `
 <div class="user-info">
