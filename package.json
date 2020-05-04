@@ -13,7 +13,10 @@
     "stats:start": "nodemon ./stats/build/index.js",
     "stats": "concurrently npm:stats:*",
     "start:web": "parcel ./framework/index.html",
-    "start:db": "json-server -w ./framework/db.json"
+    "start:db": "json-server -w ./framework/db.json",
+    "exp:build": "cd ./express && tsc -w",
+    "exp:run": "nodemon ./express/build/index.js",
+    "exp": "concurrently npm:exp:*"
   },
   "keywords": [],
   "author": "",
