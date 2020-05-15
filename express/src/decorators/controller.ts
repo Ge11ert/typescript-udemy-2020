@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import express from 'express';
-
-export const router = express.Router();
+import AppRouter from '../app.router';
 
 export function controller(routePrefix: string = ''): ClassDecorator {
   return function (target: Function): void {
+    const router = AppRouter.getInstance();
+
     Object.getOwnPropertyNames(target.prototype)
       .filter(notConstructor)
       .forEach((prop: string) => {
@@ -12,7 +12,7 @@ export function controller(routePrefix: string = ''): ClassDecorator {
 
         const path = Reflect.getMetadata('path', target.prototype, prop);
 
-        if (path) {
+        if (path !== undefined && typeof path === 'string') {
           router.get(`${routePrefix}${path}`, routeHandler);
         }
       });
