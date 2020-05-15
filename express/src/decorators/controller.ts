@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import AppRouter from '../app.router';
+import { Method, MetadataKey } from '../constants/enums';
 
 export function controller(routePrefix: string = ''): ClassDecorator {
   return function (target: Function): void {
@@ -10,10 +11,11 @@ export function controller(routePrefix: string = ''): ClassDecorator {
       .forEach((prop: string) => {
         const routeHandler = target.prototype[prop];
 
-        const path = Reflect.getMetadata('path', target.prototype, prop);
+        const path = Reflect.getMetadata(MetadataKey.PATH, target.prototype, prop);
+        const method: Method = Reflect.getMetadata(MetadataKey.METHOD, target.prototype, prop);
 
-        if (path !== undefined && typeof path === 'string') {
-          router.get(`${routePrefix}${path}`, routeHandler);
+        if (isString(path) && isString(method)) {
+          router[method](`${routePrefix}${path}`, routeHandler);
         }
       });
   }
@@ -21,4 +23,8 @@ export function controller(routePrefix: string = ''): ClassDecorator {
 
 function notConstructor(propertyName: string): boolean {
   return propertyName !== 'constructor';
+}
+
+function isString(value: any): value is string {
+  return typeof value === 'string' || value instanceof String;
 }
