@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import loginFormTemplate from '../templates/login-form';
-import { get } from '../decorators/routes';
-import { controller } from '../decorators/controller';
+import { controller, get } from '../decorators';
 
 @controller('/login')
 class LoginController {
