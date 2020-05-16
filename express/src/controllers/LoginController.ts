@@ -2,16 +2,16 @@ import { NextFunction, Request, Response} from 'express';
 import loginFormTemplate from '../templates/login-form';
 import { controller, get, post, use, validateBody } from '../decorators';
 
-@controller('/login')
+@controller('/auth')
 class LoginController {
 
-  @get('/')
+  @get('/login')
   @use(logger)
   getLogin(req: Request, res: Response): void {
     res.send(loginFormTemplate);
   }
 
-  @post('/')
+  @post('/login')
   @validateBody('email', 'password')
   postLogin(req: Request, res: Response) {
     const { email, password } = req.body;
@@ -22,6 +22,12 @@ class LoginController {
     } else {
       res.send('Invalid email or password');
     }
+  }
+
+  @get('/logout')
+  getLogout(req: Request, res: Response) {
+    req.session = undefined;
+    res.redirect('/');
   }
 }
 
