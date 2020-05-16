@@ -10,4 +10,5 @@ export enum MetadataKey {
   PATH = 'path',
   METHOD = 'method',
   MIDDLEWARE = 'middleware',
+  VALIDATION = 'validation',
 }

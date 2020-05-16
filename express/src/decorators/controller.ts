@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import AppRouter from '../app.router';
 import { Method, MetadataKey } from '../constants/enums';
+import { requestBodyValidator } from '../middlewares/body-validation-middleware';
 
 export function controller(routePrefix: string = ''): ClassDecorator {
   return function (target: Function): void {
@@ -14,9 +15,11 @@ export function controller(routePrefix: string = ''): ClassDecorator {
         const path = Reflect.getMetadata(MetadataKey.PATH, target.prototype, prop);
         const method: Method = Reflect.getMetadata(MetadataKey.METHOD, target.prototype, prop);
         const middlewares = Reflect.getMetadata(MetadataKey.MIDDLEWARE, target.prototype, prop) || [];
+        const requiredBodyProps = Reflect.getMetadata(MetadataKey.VALIDATION, target.prototype, prop) || [];
+        const validationMiddleware = requestBodyValidator(requiredBodyProps);
 
         if (isString(path) && isString(method)) {
-          router[method](`${routePrefix}${path}`, ...middlewares ,routeHandler);
+          router[method](`${routePrefix}${path}`, ...middlewares, validationMiddleware ,routeHandler);
         }
       });
   }
